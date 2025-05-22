@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <title>Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Quicksand', sans-serif; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-[#02203f] relative overflow-hidden">
+  <img
+    alt="Blue abstract wave pattern"
+    class="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+    src="https://storage.googleapis.com/a1aa/image/e42a8d41-3a9e-4fed-0f97-e36c873d54a0.jpg"
+  />
+  <form id="loginForm" class="relative z-10 w-full max-w-md px-4 py-8 bg-transparent" autocomplete="off">
+    <h2 class="text-2xl font-bold text-center mb-6 text-white">Login</h2>
+    <label class="block mb-2 text-white text-sm" for="email">E-mail</label>
+    <input
+      class="w-full mb-6 rounded-md px-4 py-3 text-lg focus:outline-none"
+      id="email"
+      type="email"
+      required
+      autocomplete="off"
+      style="background: #fff; color: #222;"
+    />
+    <label class="block mb-2 text-white text-sm" for="password">Senha</label>
+    <input
+      class="w-full mb-6 rounded-md px-4 py-3 text-lg focus:outline-none"
+      id="password"
+      type="password"
+      required
+      style="background: #fff; color: #222;"
+    />
+    <div class="flex justify-between items-center mb-6 text-white text-xs">
+      <label class="flex items-center space-x-2">
+        <input class="w-3 h-3" type="checkbox" id="keepLoggedIn" />
+        <span>Manter conectado</span>
+      </label>
+      <a class="underline" href="#">Esqueceu a senha?</a>
+    </div>
+    <button
+      class="w-full bg-[#1a5dbf] hover:bg-[#1a5dbf] text-white text-lg rounded-md py-3 border border-[#2a6edb] transition-colors"
+      type="submit"
+    >
+      Entrar
+    </button>
+    <p id="loginError" class="text-red-400 text-center mt-4 hidden">E-mail ou senha inválidos.</p>
+    <p class="text-center mt-4">
+      <a href="register.html" class="text-blue-300 underline">Criar conta</a>
+    </p>
+  </form>
+  <script>
+    // Redireciona para dashboard se já estiver logado
+    if (localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser')) {
+      window.location.href = "index.html";
+    }
+
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+
+    loginForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value.trim();
+      const keepLoggedIn = document.getElementById('keepLoggedIn').checked;
+
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const user = users.find(u => u.email === email && u.password === password);
+
+      if (user) {
+        if (keepLoggedIn) {
+          localStorage.setItem('loggedInUser', email);
+        } else {
+          sessionStorage.setItem('loggedInUser', email);
+        }
+        window.location.href = "index.html";
+      } else {
+        loginError.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <title>Criar Conta</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Quicksand', sans-serif; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-[#02203f] relative overflow-hidden">
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 w-full h-full pointer-events-none select-none"
+    style="background-image: url('https://storage.googleapis.com/a1aa/image/e42a8d41-3a9e-4fed-0f97-e36c873d54a0.jpg'); background-size: cover; background-position: center;"
+  ></div>
+  <form id="registerForm" class="relative z-10 w-full max-w-md px-4 py-8 bg-transparent" autocomplete="off">
+    <h2 class="text-2xl font-bold text-center mb-6 text-white">Criar Conta</h2>
+    <label class="block mb-2 text-white text-sm" for="email">E-mail</label>
+    <input class="w-full mb-6 rounded-md px-4 py-3 text-lg focus:outline-none"
+      id="email" type="email" required style="background: #fff; color: #222;" />
+    <label class="block mb-2 text-white text-sm" for="password">Senha</label>
+    <input class="w-full mb-6 rounded-md px-4 py-3 text-lg focus:outline-none"
+      id="password" type="password" required style="background: #fff; color: #222;" />
+    <button
+      class="w-full bg-[#1a5dbf] hover:bg-[#1a5dbf] text-white text-lg rounded-md py-3 border border-[#2a6edb] transition-colors"
+      type="submit"
+    >Cadastrar</button>
+    <p id="registerError" class="text-red-400 text-center mt-4 hidden">Preencha todos os campos corretamente.</p>
+    <p class="text-center mt-4">
+      <a href="login.html" class="text-blue-300 underline">Já tem conta? Entrar</a>
+    </p>
+  </form>
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value.trim();
+      const registerError = document.getElementById('registerError');
+      if (!email || password.length < 4) {
+        registerError.textContent = 'Preencha todos os campos corretamente (senha com pelo menos 4 caracteres).';
+        registerError.classList.remove('hidden');
+        return;
+      }
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      if (users.find(u => u.email === email)) {
+        registerError.textContent = 'E-mail já cadastrado.';
+        registerError.classList.remove('hidden');
+        return;
+      }
+      users.push({ email, password });
+      localStorage.setItem('users', JSON.stringify(users));
+      alert('Conta criada com sucesso! Faça login.');
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>

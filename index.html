@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <title>Force X Dashboard - Painel Completo com Menu Unificado</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+    body {
+      font-family: 'Montserrat', sans-serif;
+    }
+    input[type="checkbox"].toggle-switch {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 40px;
+      height: 20px;
+      background: #2a3a5a;
+      border-radius: 9999px;
+      position: relative;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    input[type="checkbox"].toggle-switch:checked {
+      background: #3ea9f5;
+    }
+    input[type="checkbox"].toggle-switch::before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      background: white;
+      border-radius: 9999px;
+      transition: transform 0.3s ease;
+    }
+    input[type="checkbox"].toggle-switch:checked::before {
+      transform: translateX(20px);
+    }
+    .circle-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 36px;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease;
+      background-color: #3a3a3a;
+      color: #a0a0a0;
+    }
+    .circle-btn.active {
+      background-color: #3ea9f5;
+      color: white;
+    }
+    .slider-bar {
+      height: 1.5rem;
+      border-radius: 9999px;
+      background-color: #0a1a3a;
+      position: relative;
+      cursor: pointer;
+    }
+    .slider-fill {
+      height: 100%;
+      background-color: #3ea9f5;
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+    }
+    .power-icon {
+      font-size: 5rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .power-on {
+      color: #3ea9f5;
+    }
+    .power-off {
+      color: #1e2a4a;
+    }
+    .camera-label {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      background-color: rgba(255, 0, 0, 0.8);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0 6px;
+      border-radius: 3px;
+      user-select: none;
+      z-index: 10;
+    }
+    .camera-container {
+      position: relative;
+      border-radius: 0.375rem;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(62, 169, 245, 0.6);
+      transition: box-shadow 0.3s ease;
+    }
+    .camera-container:hover {
+      box-shadow: 0 0 12px rgba(62, 169, 245, 1);
+    }
+    aside.comodos-menu {
+      background-color: #0B2A56;
+      width: 200px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: white;
+      user-select: none;
+    }
+    aside.comodos-menu button {
+      background-color: #3ea9f5;
+      border-radius: 0.375rem;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    aside.comodos-menu button:hover {
+      background-color: #2a8ae5;
+    }
+    .content-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    main.content-area {
+      flex-grow: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      background-color: #0B2A56;
+      border-radius: 0.5rem;
+      margin-left: 1rem;
+      min-height: 600px;
+    }
+    #unifiedMenu {
+      background-color: #0B2A56;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 1rem;
+      color: white;
+    }
+    #unifiedMenu section {
+      background-color: #04172E;
+      border-radius: 0.375rem;
+      padding: 1rem;
+    }
+    #unifiedMenu h3 {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-size: 1.125rem;
+    }
+    #unifiedMenu img {
+      border-radius: 0.375rem;
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body class="bg-[#04172E] text-white select-none min-h-screen flex flex-col">
+  <!-- Tela de Login/Cadastro Centralizada -->
+  <div id="userModal" class="fixed inset-0 flex items-center justify-center bg-[#02203f] z-50">
+    <img
+      alt="Blue abstract wave pattern with dotted texture on dark navy background"
+      class="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+      src="https://storage.googleapis.com/a1aa/image/e42a8d41-3a9e-4fed-0f97-e36c873d54a0.jpg"
+      style="z-index: 0;"
+    />
+    <form id="userForm" class="relative z-10 w-full max-w-md px-4 py-8 bg-transparent" autocomplete="off">
+      <h2 id="userFormTitle" class="text-2xl font-bold text-center mb-6 text-white">Acesso Restrito</h2>
+      <label class="block mb-2 text-white text-sm" for="userEmail">E-mail</label>
+      <input
+        class="w-full mb-6 rounded-md px-4 py-3 text-lg focus:outline-none"
+        id="userEmail"
+        type="email"
+        required
+        autocomplete="off"
+        style="background: #fff; color: #222;"
+      />
+      <label class="block mb-2 text-white text-sm" for="userPassword">Senha</label>
+      <input
+        class="w-full mb-6 rounded-md px-4 py-3 text-lg focus:outline-none"
+        id="userPassword"
+        type="password"
+        required
+        style="background: #fff; color: #222;"
+      />
+      <button
+        type="submit"
+        id="userFormBtn"
+        class="w-full bg-[#1a5dbf] hover:bg-[#1a5dbf] text-white text-lg rounded-md py-3 border border-[#2a6edb] transition-colors"
+      >
+        Entrar
+      </button>
+      <p id="userError" class="text-red-400 text-center mt-4 hidden">Preencha todos os campos corretamente.</p>
+      <p class="text-xs text-center text-blue-400 underline cursor-pointer mt-4">
+        <a href="register.html" id="goToRegister">Cadastrar</a>
+      </p>
+    </form>
+  </div>
+
+  <div class="flex flex-1 min-h-0" id="dashboardWrapper" style="display:none;">
+    <!-- Sidebar -->
+    <nav class="flex flex-col items-center bg-[#04172E] w-14 space-y-6 py-6 border-r border-[#0B2A56]">
+      <button aria-label="Menu" class="text-white text-2xl" id="btnMenu"><i class="fas fa-bars"></i></button>
+      <button aria-label="Configurações" class="text-white text-xl" id="btnSettings"><i class="fas fa-cog"></i></button>
+      <button aria-label="Localização" class="text-white text-xl" id="btnLocation"><i class="fas fa-map-marker-alt"></i></button>
+      <button aria-label="Calendário" class="text-white text-xl" id="btnCalendar"><i class="fas fa-calendar-alt"></i></button>
+      <button aria-label="Telefone" class="text-white text-xl" id="btnPhone"><i class="fas fa-phone"></i></button>
+      <button aria-label="Folha" class="text-white text-xl" id="btnLeaf"><i class="fas fa-leaf"></i></button>
+      <button aria-label="Lâmpada" class="text-white text-xl" id="btnLightbulb"><i class="fas fa-lightbulb"></i></button>
+      <button aria-label="Sino" class="text-white text-xl" id="btnBell"><i class="fas fa-bell"></i></button>
+      <button aria-label="Energia" class="text-white text-xl" id="btnPower"><i class="fas fa-power-off"></i></button>
+      <button aria-label="Usuário" class="text-white text-xl" id="btnUser"><i class="fas fa-user"></i></button>
+      <button aria-label="Quarto 1" class="text-white text-xl" id="btnRoom1"><i class="fas fa-bed"></i></button>
+      <button aria-label="Quarto 2" class="text-white text-xl" id="btnRoom2"><i class="fas fa-door-open"></i></button>
+      <button aria-label="Alexa" class="text-white text-xl" id="btnAlexa"><i class="fas fa-microphone"></i></button>
+      <button aria-label="Câmera" class="text-white text-xl" id="btnCamera"><i class="fas fa-video"></i></button>
+      <button aria-label="Temperatura" class="text-white text-xl" id="btnTemp"><i class="fas fa-thermometer-half"></i></button>
+      <button aria-label="Som" class="text-white text-xl" id="btnSom"><i class="fas fa-music"></i></button>
+      <button aria-label="Piscina" class="text-white text-xl" id="btnPiscina"><i class="fas fa-swimming-pool"></i></button>
+      <button aria-label="Sala" class="text-white text-xl" id="btnSala"><i class="fas fa-couch"></i></button>
+      <button aria-label="Cozinha" class="text-white text-xl" id="btnCozinha"><i class="fas fa-utensils"></i></button>
+      <button onclick="logout()" class="fixed top-4 right-4 bg-red-600 text-white px-4 py-2 rounded z-50">Sair</button>
+      <button aria-label="Premiação" class="text-yellow-400 text-xl" id="btnAward"><i class="fas fa-trophy"></i></button>
+      <button aria-label="Economia" class="text-green-400 text-xl" id="btnEconomia"><i class="fas fa-leaf"></i></button>
+    </nav>
+    <!-- Main content -->
+    <main class="content-area flex-grow p-4 overflow-auto max-w-7xl mx-auto">
+      <h1 class="text-3xl font-bold mb-6">Force X Dashboard</h1>
+      <section id="infoDisplay" class="bg-[#0B2A56] p-6 rounded-lg min-h-[600px] overflow-auto">
+        <p>Selecione um item no menu para visualizar o conteúdo.</p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // LOGIN/CADASTRO
+    const dashboardWrapper = document.getElementById('dashboardWrapper');
+    const userModal = document.getElementById('userModal');
+    function showDashboard(loggedIn) {
+      dashboardWrapper.style.display = loggedIn ? '' : 'none';
+      userModal.style.display = loggedIn ? 'none' : 'flex';
+    }
+    function getUsers() {
+      return JSON.parse(localStorage.getItem('users') || '[]');
+    }
+    function setLoggedInUser(email) {
+      localStorage.setItem('loggedInUser', email);
+    }
+    function getLoggedInUser() {
+      return localStorage.getItem('loggedInUser');
+    }
+    function logout() {
+      localStorage.removeItem('loggedInUser');
+      showDashboard(false);
+    }
+    // Login
+    const userForm = document.getElementById('userForm');
+    const userError = document.getElementById('userError');
+    userForm.onsubmit = function(e) {
+      e.preventDefault();
+      const email = document.getElementById('userEmail').value.trim().toLowerCase();
+      const password = document.getElementById('userPassword').value;
+      const users = getUsers();
+      const user = users.find(u => u.email === email && u.password === password);
+      if (user) {
+        setLoggedInUser(email);
+        showDashboard(true);
+      } else {
+        userError.textContent = 'E-mail ou senha inválidos.';
+        userError.classList.remove('hidden');
+      }
+    };
+    document.getElementById('goToRegister').onclick = function(e) {
+      e.preventDefault();
+      window.location.href = 'register.html';
+    };
+    if (getLoggedInUser()) {
+      showDashboard(true);
+    } else {
+      showDashboard(false);
+    }
+
+    // DASHBOARD
+    const infoDisplay = document.getElementById('infoDisplay');
+    const templates = {
+      quarto1: `
+          <h2 class="text-xl font-bold mb-4">Quarto 1</h2>
+  <label class="inline-flex items-center cursor-pointer mb-4">
+    <input checked id="lightToggle1" class="toggle-switch" type="checkbox" />
+    <span class="ml-2 text-white font-semibold">Luzes Ligadas</span>
+  </label>
+  <img alt="Quarto 1 com cama e paredes escuras, iluminação suave" src="https://storage.googleapis.com/a1aa/image/e23cd46d-bdb4-48bf-4810-5f656ca2e2b0.jpg" />
+  <div class="mt-4">
+    <div class="flex justify-between items-center mb-1">
+      <span class="text-xs font-semibold">BRILHO</span>
+      <span class="text-xs font-semibold">QUARTO 1</span>
+    </div>
+    <div class="slider-bar" id="brightnessSlider1" tabindex="0" style="width:100%;">
+      <div class="slider-fill" id="brightnessFill1" style="width: 50%;"></div>
+    </div>
+  </div>
+`,
+      quarto2: `
+         <h2 class="text-xl font-bold mb-4">Quarto 2</h2>
+  <label class="inline-flex items-center cursor-pointer mb-4">
+    <input checked id="lightToggle2" class="toggle-switch" type="checkbox" />
+    <span class="ml-2 text-white font-semibold">Luzes Ligadas</span>
+  </label>
+  <img alt="Quarto 2 com cama clara, janela e iluminação natural" src="https://storage.googleapis.com/a1aa/image/c5cd5876-06ff-42a3-64f3-24278f797282.jpg" />
+  <div class="mt-4">
+    <div class="flex justify-between items-center mb-1">
+      <span class="text-xs font-semibold">BRILHO</span>
+      <span class="text-xs font-semibold">QUARTO 2</span>
+    </div>
+    <div class="slider-bar" id="brightnessSlider2" tabindex="0" style="width:100%;">
+      <div class="slider-fill" id="brightnessFill2" style="width: 75%;"></div>
+    </div>
+  </div>
+`,
+
+      alexa: `
+        <h2 class="text-xl font-bold mb-4">Alexa</h2>
+        <div class="flex justify-between w-full items-center mb-4">
+          <span class="text-white font-semibold text-sm">ALEXIA</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input aria-label="Alexa On/Off" checked id="alexaToggle" class="toggle-switch" type="checkbox" />
+          </label>
+        </div>
+        <img alt="Dispositivo Alexa circular preto com anel de luz azul na base" class="rounded-full w-28 h-28 object-cover mx-auto" src="https://storage.googleapis.com/a1aa/image/ffc17028-3645-42fc-b4c3-f3902e9b5beb.jpg" />
+      `,
+      temperatura: `
+        <h2 class="text-xl font-bold mb-4">Ar-condicionado</h2>
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <p class="text-sm text-gray-300 font-semibold">Ar-condicionado</p>
+            <p class="text-xs text-gray-400">Sala de Estar</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="acToggle" type="checkbox" class="toggle-switch" checked />
+          </label>
+        </div>
+        <div class="flex flex-col items-center">
+          <div class="text-xs text-gray-400 mb-1">RESFRIANDO PARA</div>
+          <div id="tempDisplay" class="text-5xl font-bold">21,5°</div>
+          <div class="text-xs text-gray-400 mt-1" id="timeDisplay">EM ATÉ 7 MIN</div>
+        </div>
+        <div class="flex justify-between px-10 mt-6">
+          <button id="tempDown" class="circle-btn inactive" aria-label="Diminuir temperatura">-</button>
+          <button id="tempUp" class="circle-btn active" aria-label="Aumentar temperatura">+</button>
+        </div>
+        <div class="flex justify-between text-xs mt-4 px-6 text-gray-400">
+          <span>16°</span>
+          <span>32°</span>
+        </div>
+        <div class="flex justify-around mt-6 text-gray-400">
+          <div class="text-center cursor-pointer" id="fanSpeedBtn">
+            <i class="fas fa-fan text-xl mb-1"></i>
+            <div class="text-xs" id="fanSpeedText">2º Nível · Desl.</div>
+          </div>
+          <div class="text-center cursor-pointer" id="timerBtn">
+            <i class="fas fa-clock text-xl mb-1"></i>
+            <div class="text-xs" id="timerText">5 Horas · Desl.</div>
+          </div>
+          <div class="text-center cursor-pointer" id="autoModeBtn">
+            <i class="fas fa-snowflake text-xl mb-1 text-blue-400"></i>
+            <div class="text-xs text-blue-400" id="autoModeText">Modo Auto</div>
+          </div>
+        </div>
+      `,
+      cameras: `
+        <h2 class="text-xl font-bold mb-4">Câmeras de Gravação</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="camera-container">
+            <span class="camera-label">REC</span>
+            <img alt="Imagem da câmera 1 mostrando cozinha com armários e bancada" class="w-full h-44 object-cover rounded-md" src="https://storage.googleapis.com/a1aa/image/760d1afb-95da-46ae-c000-06076f95e846.jpg" />
+          </div>
+          <div class="camera-container">
+            <span class="camera-label">REC</span>
+            <img alt="Imagem da câmera 2 mostrando sala com sofá e mesa" class="w-full h-44 object-cover rounded-md" src="https://storage.googleapis.com/a1aa/image/581ee2d8-6303-48d9-f9a8-77e5a91e8f69.jpg" />
+          </div>
+          <div class="camera-container">
+            <span class="camera-label">REC</span>
+            <img alt="Imagem da câmera 3 mostrando exterior da casa, frente" class="w-full h-44 object-cover rounded-md" src="https://storage.googleapis.com/a1aa/image/82822852-dfaa-400d-4ab8-6d8c41c9e3f6.jpg" />
+          </div>
+          <div class="camera-container">
+            <span class="camera-label">REC</span>
+            <img alt="Imagem da câmera 4 mostrando exterior da casa, jardim" class="w-full h-44 object-cover rounded-md" src="https://storage.googleapis.com/a1aa/image/fd4d59ea-3330-4fb5-687c-80035448505f.jpg" />
+          </div>
+        </div>
+      `,
+      som: `
+        <h2 class="text-xl font-bold mb-4">Som</h2>
+        <div class="flex justify-center space-x-6 items-center mb-4">
+          <button aria-label="Shuffle" class="circle-btn" id="shuffleBtn" title="Shuffle"><i class="fas fa-random"></i></button>
+          <button aria-label="Previous" class="circle-btn" id="prevBtn" title="Previous"><i class="fas fa-step-backward"></i></button>
+          <button aria-label="Play" class="circle-btn active" id="playPauseBtn" title="Play/Pause"><i class="fas fa-play"></i></button>
+          <button aria-label="Next" class="circle-btn" id="nextBtn" title="Next"><i class="fas fa-step-forward"></i></button>
+          <button aria-label="Cast" class="circle-btn" id="castBtn" title="Cast"><i class="fas fa-tv"></i></button>
+        </div>
+        <div class="flex items-center space-x-2 text-xs text-gray-400">
+          <span id="currentTime">2:49</span>
+          <input aria-label="Music progress" class="flex-grow h-1 rounded-lg bg-[#3ea9f5] accent-[#3ea9f5]" id="progressBar" max="100" min="0" type="range" value="50" />
+          <span id="totalTime">2:49</span>
+        </div>
+      `,
+      energia: `
+        <h2 class="text-xl font-bold mb-4">Energia Usada</h2>
+        <div class="flex justify-between items-center mb-4">
+          <span class="bg-white text-black text-xs rounded-md px-2 py-0.5 font-semibold">102 kWh</span>
+        </div>
+        <svg aria-label="Gráfico de energia usada" aria-hidden="true" fill="none" height="120" role="img" viewBox="0 0 600 120" width="100%" xmlns="http://www.w3.org/2000/svg">
+          <rect fill="#0a1a3a" height="120" width="600"></rect>
+          <path d="M0 90 Q50 80 100 100 T200 70 T300 110 T400 90 T500 110 T600 90" fill="none" stroke="#3ea9f5" stroke-width="3"></path>
+          <text fill="#5a6a8a" font-family="Montserrat, sans-serif" font-size="14" x="20" y="115">SEG</text>
+          <text fill="#5a6a8a" font-family="Montserrat, sans-serif" font-size="14" x="100" y="115">TER</text>
+          <text fill="#5a6a8a" font-family="Montserrat, sans-serif" font-size="14" x="180" y="115">QUA</text>
+          <text fill="#5a6a8a" font-family="Montserrat, sans-serif" font-size="14" x="280" y="115">QUI</text>
+          <text fill="#5a6a8a" font-family="Montserrat, sans-serif" font-size="14" x="380" y="115">SEX</text>
+          <text fill="#5a6a8a" font-family="Montserrat, sans-serif" font-size="14" x="480" y="115">DOM</text>
+          <text fill="#5a6a8a" font-family="Montserrat, sans-serif" font-size="14" x="10" y="20">170</text>
+          <text fill="#5a6a8a" font-family="Montserrat, sans-serif" font-size="14" x="10" y="50">100</text>
+          <text fill="#5a6a8a" font-family="Montserrat, sans-serif" font-size="14" x="10" y="80">80</text>
+          <text fill="#5a6a8a" font-family="Montserrat, sans-serif" font-size="14" x="10" y="110">0</text>
+        </svg>
+      `,
+      premiacao: `
+        <h2 class="text-2xl font-bold mb-6 text-center" id="trophyTitle">Metas e Prêmios</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="prize-item bg-[#0B2A56] p-4 rounded-lg shadow">
+            <img alt="Imagem de um console de videogame moderno preto com controles" class="w-full h-40 object-cover rounded mb-2" src="https://storage.googleapis.com/a1aa/image/652e30f2-da4c-4b33-1abb-8d014dbafca7.jpg"/>
+            <div class="prize-info">
+              <h4 class="font-bold text-lg mb-1">Console de Videogame</h4>
+              <p>Meta: <span class="text-yellow-300 font-bold">500 pontos</span></p>
+              <p>Energia Economizada: <span class="text-green-400 font-bold">50 kWh</span></p>
+            </div>
+          </div>
+          <div class="prize-item bg-[#0B2A56] p-4 rounded-lg shadow">
+            <img alt="Imagem de um carro esportivo vermelho brilhante estacionado em uma estrada" class="w-full h-40 object-cover rounded mb-2" src="https://storage.googleapis.com/a1aa/image/ddd252d9-38e2-42b8-e555-176a8191f898.jpg"/>
+            <div class="prize-info">
+              <h4 class="font-bold text-lg mb-1">Carro Esportivo</h4>
+              <p>Meta: <span class="text-yellow-300 font-bold">5000 pontos</span></p>
+              <p>Energia Economizada: <span class="text-green-400 font-bold">500 kWh</span></p>
+            </div>
+          </div>
+          <div class="prize-item bg-[#0B2A56] p-4 rounded-lg shadow">
+            <img alt="Imagem de um smartphone moderno com tela grande e bordas finas" class="w-full h-40 object-cover rounded mb-2" src="https://storage.googleapis.com/a1aa/image/a7f65ff0-2a0b-4ee2-954a-89376ae06d26.jpg"/>
+            <div class="prize-info">
+              <h4 class="font-bold text-lg mb-1">Smartphone</h4>
+              <p>Meta: <span class="text-yellow-300 font-bold">1500 pontos</span></p>
+              <p>Energia Economizada: <span class="text-green-400 font-bold">150 kWh</span></p>
+            </div>
+          </div>
+        </div>
+      `,
+      piscina: `
+        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <i class="fas fa-swimming-pool text-blue-300"></i> Piscina
+        </h2>
+        <img alt="Piscina iluminada à noite" src="https://th.bing.com/th/id/OIP.3t1P_S7aOuj92s3C-lerYgHaEK?cb=iwp2&rs=1&pid=ImgDetMain" />
+        <div class="flex items-center gap-4 mb-4">
+          <label class="inline-flex items-center cursor-pointer">
+            <input id="poolLightToggle" class="toggle-switch" type="checkbox" checked />
+            <span class="ml-2 text-white font-semibold">Luz da Piscina</span>
+          </label>
+          <label class="inline-flex items-center cursor-pointer">
+            <input id="poolPumpToggle" class="toggle-switch" type="checkbox" />
+            <span class="ml-2 text-white font-semibold">Bomba</span>
+          </label>
+        </div>
+        <div class="mt-4">
+          <span class="text-xs text-gray-300">Temperatura da água:</span>
+          <span class="text-lg font-bold text-blue-200 ml-2">27°C</span>
+        </div>
+      `,
+      sala: `
+        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+    <i class="fas fa-couch text-pink-300"></i> Sala de Estar
+  </h2>
+  <label class="inline-flex items-center cursor-pointer mb-4">
+    <input checked id="lightToggleSala" class="toggle-switch" type="checkbox" />
+    <span class="ml-2 text-white font-semibold">Luzes Ligadas</span>
+  </label>
+  <img alt="Sala de estar decorada" src="https://th.bing.com/th/id/R.49a0cc962d0d7aa7d586cc9dcd444f23?rik=H2GrH8z1YokzQQ&riu=http%3a%2f%2fmonterre.com.br%2fapp%2fuploads%2f2018%2f03%2fAPROVADA_SALA-APTO-TIPO.jpg&ehk=Kl273fRxL5X8tBf6l7VVVs0S5Yjoq2pRBQ2ik8kdJfg%3d&risl=&pid=ImgRaw&r=0" />
+  <div class="mt-4">
+    <div class="flex justify-between items-center mb-1">
+      <span class="text-xs font-semibold">BRILHO</span>
+      <span class="text-xs font-semibold">SALA</span>
+    </div>
+    <div class="slider-bar" id="brightnessSliderSala" tabindex="0" style="width:100%;">
+      <div class="slider-fill" id="brightnessFillSala" style="width: 60%;"></div>
+    </div>
+  </div>
+`,
+
+      cozinha: `
+         <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+    <i class="fas fa-utensils text-yellow-300"></i> Cozinha
+  </h2>
+  <label class="inline-flex items-center cursor-pointer mb-4">
+    <input checked id="lightToggleCozinha" class="toggle-switch" type="checkbox" />
+    <span class="ml-2 text-white font-semibold">Luzes Ligadas</span>
+  </label>
+  <img alt="Cozinha moderna" src="https://cdn.awsli.com.br/600x450/571/571644/produto/252752878/cozinha-01-05gqj0p1d1.jpg" class="rounded-lg mb-4" />
+  <div class="mt-4">
+    <div class="flex justify-between items-center mb-1">
+      <span class="text-xs font-semibold">BRILHO</span>
+      <span class="text-xs font-semibold">COZINHA</span>
+    </div>
+    <div class="slider-bar" id="brightnessSliderCozinha" tabindex="0" style="width:100%;">
+      <div class="slider-fill" id="brightnessFillCozinha" style="width: 70%;"></div>
+    </div>
+  </div>
+`,
+      economia: `
+        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <i class="fas fa-leaf text-green-400"></i> Modo Economia de Energia
+        </h2>
+        <div class="flex flex-col items-center w-full">
+          <button id="toggleMode" class="bg-[#1a5dbf] text-white px-4 py-2 rounded-md mb-4">
+            Modo Economia
+          </button>
+          <div id="chart-container" class="w-full max-w-2xl">
+            <canvas id="quilowattChart"></canvas>
+          </div>
+        </div>
+      `
+    };
+
+    const unifiedMenuContent = `
+      <div id="unifiedMenu" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section>${templates.quarto1}</section>
+        <section>${templates.quarto2}</section>
+        <section>${templates.alexa}</section>
+        <section>${templates.temperatura}</section>
+        <section>${templates.cameras}</section>
+        <section>${templates.energia}</section>
+        <section>${templates.piscina}</section>
+        <section>${templates.sala}</section>
+        <section>${templates.cozinha}</section>
+      </div>
+    `;
+
+    function loadContent(name) {
+      if (name === 'menu') {
+        infoDisplay.innerHTML = unifiedMenuContent;
+        setupRoom1();
+        setupRoom2();
+        setupAlexa();
+        setupAc();
+      } else if (name === 'som') {
+        infoDisplay.innerHTML = templates.som;
+        setupSom();
+      } else if (name === 'economia') {
+        infoDisplay.innerHTML = templates.economia;
+        setupEconomia();
+      } else {
+        infoDisplay.innerHTML = templates[name] || '<p>Conteúdo não disponível.</p>';
+        if (name === 'power') setupPowerMode && setupPowerMode();
+        else if (name === 'quarto1') setupRoom1();
+        else if (name === 'quarto2') setupRoom2();
+        else if (name === 'alexa') setupAlexa();
+        else if (name === 'temperatura') setupAc();
+      }
+    }
+
+    // Sidebar buttons
+    document.getElementById('btnMenu').addEventListener('click', () => loadContent('menu'));
+    document.getElementById('btnSettings').addEventListener('click', () => loadContent('settings'));
+    document.getElementById('btnLocation').addEventListener('click', () => loadContent('location'));
+    document.getElementById('btnCalendar').addEventListener('click', () => loadContent('calendar'));
+    document.getElementById('btnPhone').addEventListener('click', () => loadContent('phone'));
+    document.getElementById('btnLeaf').addEventListener('click', () => loadContent('leaf'));
+    document.getElementById('btnLightbulb').addEventListener('click', () => loadContent('lightbulb'));
+    document.getElementById('btnBell').addEventListener('click', () => loadContent('bell'));
+    document.getElementById('btnPower').addEventListener('click', () => loadContent('power'));
+    document.getElementById('btnUser').addEventListener('click', () => loadContent('user'));
+    document.getElementById('btnRoom1').addEventListener('click', () => loadContent('quarto1'));
+    document.getElementById('btnRoom2').addEventListener('click', () => loadContent('quarto2'));
+    document.getElementById('btnAlexa').addEventListener('click', () => loadContent('alexa'));
+    document.getElementById('btnCamera').addEventListener('click', () => loadContent('cameras'));
+    document.getElementById('btnTemp').addEventListener('click', () => loadContent('temperatura'));
+    document.getElementById('btnSom').addEventListener('click', () => loadContent('som'));
+    document.getElementById('btnAward').addEventListener('click', () => loadContent('premiacao'));
+    document.getElementById('btnPiscina').addEventListener('click', () => loadContent('piscina'));
+    document.getElementById('btnSala').addEventListener('click', () => loadContent('sala'));
+    document.getElementById('btnCozinha').addEventListener('click', () => loadContent('cozinha'));
+    document.getElementById('btnEconomia').addEventListener('click', () => loadContent('economia'));
+
+    function setupRoom1() {/* igual ao seu código */}
+    function setupRoom2() {/* igual ao seu código */}
+    function setupAlexa() {/* igual ao seu código */}
+    function setupAc() {
+  const tempDisplay = document.getElementById('tempDisplay');
+  const tempDown = document.getElementById('tempDown');
+  const tempUp = document.getElementById('tempUp');
+  const acToggle = document.getElementById('acToggle');
+  const fanSpeedBtn = document.getElementById('fanSpeedBtn');
+  const fanSpeedText = document.getElementById('fanSpeedText');
+  const timerBtn = document.getElementById('timerBtn');
+  const timerText = document.getElementById('timerText');
+  const autoModeBtn = document.getElementById('autoModeBtn');
+  const autoModeText = document.getElementById('autoModeText');
+  const timeDisplay = document.getElementById('timeDisplay');
+
+  let temp = 21.5;
+  let acOn = acToggle ? acToggle.checked : true;
+  let fanSpeed = 2; // 1, 2, 3
+  let timer = 5; // horas
+  let timerOn = false;
+  let autoMode = true;
+
+  function updateTemp() {
+    if (tempDisplay) tempDisplay.textContent = temp.toFixed(1) + '°';
+  }
+
+  function updateFanSpeed() {
+    if (fanSpeedText) {
+      fanSpeedText.textContent = `${fanSpeed}º Nível` + (fanSpeed > 1 ? ' · Desl.' : '');
+    }
+  }
+
+  function updateTimer() {
+    if (timerText) {
+      timerText.textContent = timerOn ? `${timer} Horas · Lig.` : `${timer} Horas · Desl.`;
+    }
+    if (timeDisplay) {
+      timeDisplay.textContent = timerOn ? `FALTAM ${timer}H` : `EM ATÉ 7 MIN`;
+    }
+  }
+
+  function updateAutoMode() {
+    if (autoModeText && autoModeBtn) {
+      autoModeText.textContent = autoMode ? 'Modo Auto' : 'Manual';
+      autoModeText.classList.toggle('text-blue-400', autoMode);
+      autoModeBtn.querySelector('i').classList.toggle('text-blue-400', autoMode);
+    }
+  }
+
+  function updateAcState() {
+    if (acToggle) acToggle.checked = acOn;
+    if (tempDown) tempDown.disabled = !acOn;
+    if (tempUp) tempUp.disabled = !acOn;
+    if (fanSpeedBtn) fanSpeedBtn.classList.toggle('opacity-50', !acOn);
+    if (timerBtn) timerBtn.classList.toggle('opacity-50', !acOn);
+    if (autoModeBtn) autoModeBtn.classList.toggle('opacity-50', !acOn);
+  }
+
+  if (tempDown) {
+    tempDown.onclick = () => {
+      if (acOn && temp > 16) {
+        temp -= 0.5;
+        updateTemp();
+      }
+    };
+  }
+  if (tempUp) {
+    tempUp.onclick = () => {
+      if (acOn && temp < 32) {
+        temp += 0.5;
+        updateTemp();
+      }
+    };
+  }
+  if (acToggle) {
+    acToggle.onchange = () => {
+      acOn = acToggle.checked;
+      updateAcState();
+    };
+  }
+  if (fanSpeedBtn) {
+    fanSpeedBtn.onclick = () => {
+      if (!acOn) return;
+      fanSpeed = fanSpeed === 3 ? 1 : fanSpeed + 1;
+      updateFanSpeed();
+    };
+  }
+  if (timerBtn) {
+    timerBtn.onclick = () => {
+      if (!acOn) return;
+      timerOn = !timerOn;
+      updateTimer();
+    };
+  }
+  if (autoModeBtn) {
+    autoModeBtn.onclick = () => {
+      if (!acOn) return;
+      autoMode = !autoMode;
+      updateAutoMode();
+    };
+  }
+
+  updateTemp();
+  updateFanSpeed();
+  updateTimer();
+  updateAutoMode();
+  updateAcState();
+}
+    function setupSom() {/* igual ao seu código */}
+
+    function setupEconomia() {
+      // Chart.js modo economia
+      const ctx = document.getElementById('quilowattChart').getContext('2d');
+      const data = {
+        labels: Array(30).fill(''),
+        datasets: [{
+          label: 'Quilowatt (kW)',
+          backgroundColor: 'rgba(62, 169, 245, 0.2)',
+          borderColor: '#3ea9f5',
+          borderWidth: 3,
+          fill: true,
+          tension: 0.3,
+          data: Array(30).fill(0),
+          pointRadius: 0,
+        }]
+      };
+      const options = {
+        responsive: true,
+        animation: false,
+        scales: {
+          x: {
+            display: true,
+            title: { display: true, text: 'Tempo (segundos atrás)' },
+            ticks: {
+              autoSkip: true,
+              maxTicksLimit: 10,
+              callback: (value, index) => -(29 - index) + 's'
+            }
+          },
+          y: {
+            display: true,
+            beginAtZero: true,
+            title: { display: true, text: 'Quilowatt (kW)' },
+            suggestedMin: 0,
+            suggestedMax: 5
+          }
+        },
+        plugins: {
+          legend: {
+            labels: { color: '#fff', font: { weight: 'bold', size: 14 } }
+          },
+          tooltip: {
+            enabled: true,
+            backgroundColor: '#333',
+            titleFont: { size: 14, weight: 'bold' },
+            bodyFont: { size: 13 },
+            callbacks: {
+              label: context => ` ${context.parsed.y.toFixed(2)} kW`
+            }
+          }
+        }
+      };
+      const quilowattChart = new Chart(ctx, { type: 'line', data, options });
+      let modoEconomia = false;
+      function gerarConsumoQuilowatt() {
+        if (modoEconomia) {
+          return (Math.random() * 2.0 + 0.5);
+        } else {
+          return (Math.random() * 4.0 + 0.5);
+        }
+      }
+      function atualizarGrafico() {
+        data.datasets[0].data.shift();
+        data.labels.shift();
+        data.labels.push('');
+        data.datasets[0].data.push(gerarConsumoQuilowatt());
+        quilowattChart.update('none');
+      }
+      setInterval(atualizarGrafico, 1000);
+      document.getElementById('toggleMode').addEventListener('click', () => {
+        modoEconomia = !modoEconomia;
+        document.getElementById('toggleMode').textContent = modoEconomia ? 'Modo Normal' : 'Modo Economia';
+      });
+    }
+
+
+// Função genérica para sliders de brilho
+function setupSlider(sliderId, fillId, initialValue = 50) {
+  const slider = document.getElementById(sliderId);
+  const fill = document.getElementById(fillId);
+  let value = initialValue;
+
+  function setFill(x) {
+    value = Math.max(0, Math.min(100, x));
+    fill.style.width = value + '%';
+  }
+
+  if (slider) {
+    slider.addEventListener('click', function(e) {
+      const rect = slider.getBoundingClientRect();
+      const percent = ((e.clientX - rect.left) / rect.width) * 100;
+      setFill(percent);
+    });
+    slider.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowLeft') setFill(value - 5);
+      if (e.key === 'ArrowRight') setFill(value + 5);
+    });
+  }
+}
+
+// Ative os sliders de cada cômodo
+function setupRoom1() {
+  setupSlider('brightnessSlider1', 'brightnessFill1', 50);
+}
+function setupRoom2() {
+  setupSlider('brightnessSlider2', 'brightnessFill2', 75);
+}
+function setupSala() {
+  setupSlider('brightnessSliderSala', 'brightnessFillSala', 60);
+}
+function setupCozinha() {
+  setupSlider('brightnessSliderCozinha', 'brightnessFillCozinha', 70);
+}
+
+// Carrega menu ao iniciar
+loadContent('menu');
+
+</script>
+</body>
+</html>
