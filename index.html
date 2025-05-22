@@ -561,27 +561,31 @@
     `;
 
     function loadContent(name) {
-      if (name === 'menu') {
-        infoDisplay.innerHTML = unifiedMenuContent;
-        setupRoom1();
-        setupRoom2();
-        setupAlexa();
-        setupAc();
-      } else if (name === 'som') {
-        infoDisplay.innerHTML = templates.som;
-        setupSom();
-      } else if (name === 'economia') {
-        infoDisplay.innerHTML = templates.economia;
-        setupEconomia();
-      } else {
-        infoDisplay.innerHTML = templates[name] || '<p>Conteúdo não disponível.</p>';
-        if (name === 'power') setupPowerMode && setupPowerMode();
-        else if (name === 'quarto1') setupRoom1();
-        else if (name === 'quarto2') setupRoom2();
-        else if (name === 'alexa') setupAlexa();
-        else if (name === 'temperatura') setupAc();
-      }
-    }
+          if (name === 'menu') {
+            infoDisplay.innerHTML = unifiedMenuContent;
+            setupRoom1();
+            setupRoom2();
+            setupAlexa();
+            setupAc();
+            setupSala();
+            setupCozinha();
+          } else if (name === 'som') {
+            infoDisplay.innerHTML = templates.som;
+            setupSom();
+          } else if (name === 'economia') {
+            infoDisplay.innerHTML = templates.economia;
+            setupEconomia();
+          } else {
+            infoDisplay.innerHTML = templates[name] || '<p>Conteúdo não disponível.</p>';
+            if (name === 'power') setupPowerMode && setupPowerMode();
+            else if (name === 'quarto1') setupRoom1();
+            else if (name === 'quarto2') setupRoom2();
+            else if (name === 'alexa') setupAlexa();
+            else if (name === 'temperatura') setupAc();
+            else if (name === 'sala') setupSala();
+            else if (name === 'cozinha') setupCozinha();
+          }
+        }
 
     // Sidebar buttons
     document.getElementById('btnMenu').addEventListener('click', () => loadContent('menu'));
@@ -831,7 +835,6 @@ function setupCozinha() {
   setupSlider('brightnessSliderCozinha', 'brightnessFillCozinha', 70);
 }
 
-// Carrega menu ao iniciar
 loadContent('menu');
 
 </script>
