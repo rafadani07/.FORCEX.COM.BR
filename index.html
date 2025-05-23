@@ -303,37 +303,41 @@
     // DASHBOARD
     const infoDisplay = document.getElementById('infoDisplay');
     const templates = {
-      quarto1: `
-          <h2 class="text-xl font-bold mb-4">Quarto 1</h2>
-  <label class="inline-flex items-center cursor-pointer mb-4">
-    <input checked id="lightToggle1" class="toggle-switch" type="checkbox" />
-    <span class="ml-2 text-white font-semibold">Luzes Ligadas</span>
-  </label>
-  <img alt="Quarto 1 com cama e paredes escuras, iluminação suave" src="https://storage.googleapis.com/a1aa/image/e23cd46d-bdb4-48bf-4810-5f656ca2e2b0.jpg" />
-  <div class="mt-4">
-    <div class="flex justify-between items-center mb-1">
-      <span class="text-xs font-semibold">BRILHO</span>
-      <span class="text-xs font-semibold">QUARTO 1</span>
-    </div>
-    <div class="slider-bar" id="brightnessSlider1" tabindex="0" style="width:100%;">
-      <div class="slider-fill" id="brightnessFill1" style="width: 50%;"></div>
+quarto1: `
+  <div>
+    <h2 class="text-xl font-bold mb-4">Quarto 1</h2>
+    <label class="inline-flex items-center cursor-pointer mb-4">
+      <input checked id="lightToggle1" class="toggle-switch" type="checkbox" />
+      <span class="ml-2 text-white font-semibold">Luzes Ligadas</span>
+    </label>
+    <img alt="Quarto 1 com cama e paredes escuras, iluminação suave" src="https://storage.googleapis.com/a1aa/image/e23cd46d-bdb4-48bf-4810-5f656ca2e2b0.jpg" />
+    <div class="mt-4">
+      <div class="flex justify-between items-center mb-1">
+        <span class="text-xs font-semibold">BRILHO</span>
+        <span class="text-xs font-semibold">QUARTO 1</span>
+      </div>
+      <div class="slider-bar" id="brightnessSlider1" tabindex="0" style="width:100%;">
+        <div class="slider-fill" id="brightnessFill1" style="width: 50%;"></div>
+      </div>
     </div>
   </div>
 `,
-      quarto2: `
-         <h2 class="text-xl font-bold mb-4">Quarto 2</h2>
-  <label class="inline-flex items-center cursor-pointer mb-4">
-    <input checked id="lightToggle2" class="toggle-switch" type="checkbox" />
-    <span class="ml-2 text-white font-semibold">Luzes Ligadas</span>
-  </label>
-  <img alt="Quarto 2 com cama clara, janela e iluminação natural" src="https://storage.googleapis.com/a1aa/image/c5cd5876-06ff-42a3-64f3-24278f797282.jpg" />
-  <div class="mt-4">
-    <div class="flex justify-between items-center mb-1">
-      <span class="text-xs font-semibold">BRILHO</span>
-      <span class="text-xs font-semibold">QUARTO 2</span>
-    </div>
-    <div class="slider-bar" id="brightnessSlider2" tabindex="0" style="width:100%;">
-      <div class="slider-fill" id="brightnessFill2" style="width: 75%;"></div>
+quarto2: `
+  <div>
+    <h2 class="text-xl font-bold mb-4">Quarto 2</h2>
+    <label class="inline-flex items-center cursor-pointer mb-4">
+      <input checked id="lightToggle2" class="toggle-switch" type="checkbox" />
+      <span class="ml-2 text-white font-semibold">Luzes Ligadas</span>
+    </label>
+    <img alt="Quarto 2 com cama clara, janela e iluminação natural" src="https://storage.googleapis.com/a1aa/image/c5cd5876-06ff-42a3-64f3-24278f797282.jpg" />
+    <div class="mt-4">
+      <div class="flex justify-between items-center mb-1">
+        <span class="text-xs font-semibold">BRILHO</span>
+        <span class="text-xs font-semibold">QUARTO 2</span>
+      </div>
+      <div class="slider-bar" id="brightnessSlider2" tabindex="0" style="width:100%;">
+        <div class="slider-fill" id="brightnessFill2" style="width: 75%;"></div>
+      </div>
     </div>
   </div>
 `,
@@ -531,34 +535,50 @@
     </div>
   </div>
 `,
-      economia: `
-        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
-          <i class="fas fa-leaf text-green-400"></i> Modo Economia de Energia
-        </h2>
-        <div class="flex flex-col items-center w-full">
-          <button id="toggleMode" class="bg-[#1a5dbf] text-white px-4 py-2 rounded-md mb-4">
-            Modo Economia
-          </button>
-          <div id="chart-container" class="w-full max-w-2xl">
-            <canvas id="quilowattChart"></canvas>
-          </div>
+        economia: `
+    <div>
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i class="fas fa-leaf text-green-400"></i> Modo Economia de Energia
+      </h2>
+      <button id="toggleMode" class="bg-[#1a5dbf] text-white px-4 py-2 rounded-md mb-4">
+        Modo Economia
+      </button>
+      <div id="energy-value" class="text-4xl font-extrabold text-green-300 mb-4">-- kW</div>
+      <div id="charts-wrapper" class="flex flex-wrap gap-6 justify-center">
+        <div class="chart-container w-full max-w-xl">
+          <h3 class="text-lg font-bold mb-2 text-green-300">Consumo no Mês (kW/dia)</h3>
+          <canvas id="monthlyChart"></canvas>
         </div>
-      `
-    };
-
-    const unifiedMenuContent = `
-      <div id="unifiedMenu" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <section>${templates.quarto1}</section>
-        <section>${templates.quarto2}</section>
-        <section>${templates.alexa}</section>
-        <section>${templates.temperatura}</section>
-        <section>${templates.cameras}</section>
-        <section>${templates.energia}</section>
-        <section>${templates.piscina}</section>
-        <section>${templates.sala}</section>
-        <section>${templates.cozinha}</section>
+        <div class="chart-container w-full max-w-xl">
+          <h3 class="text-lg font-bold mb-2 text-green-300">Consumo por Hora (kW)</h3>
+          <canvas id="hourlyChart"></canvas>
+        </div>
       </div>
-    `;
+      <section id="room-icons" class="flex justify-center gap-4 mt-6"></section>
+      <section id="room-detail" class="flex items-center gap-6 mt-6">
+        <img src="" alt="" id="room-image" class="rounded-lg shadow" style="max-width:160px;max-height:120px;" />
+        <div class="details-text">
+          <h3 id="room-name" class="text-green-300 text-xl font-bold mb-2">Clique em um cômodo</h3>
+          <p id="room-kwh" class="text-lg font-bold mb-2">Consumo: -- kW</p>
+          <p id="room-description" class="text-sm text-green-200">Selecione um cômodo para ver o consumo detalhado.</p>
+        </div>
+      </section>
+    </div>
+    `
+  };
+  const unifiedMenuContent = `
+    <div id="unifiedMenu" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <section>${templates.quarto1}</section>
+      <section>${templates.quarto2}</section>
+      <section>${templates.alexa}</section>
+      <section>${templates.temperatura}</section>
+      <section>${templates.cameras}</section>
+      <section>${templates.energia}</section>
+      <section>${templates.piscina}</section>
+      <section>${templates.sala}</section>
+      <section>${templates.cozinha}</section>
+    </div>
+  `;
 
     function loadContent(name) {
           if (name === 'menu') {
@@ -722,81 +742,275 @@
     function setupSom() {/* igual ao seu código */}
 
     function setupEconomia() {
-      // Chart.js modo economia
-      const ctx = document.getElementById('quilowattChart').getContext('2d');
-      const data = {
-        labels: Array(30).fill(''),
+  const toggleBtn = document.getElementById('toggleMode');
+  const energyValueEl = document.getElementById('energy-value');
+  const roomIconsEl = document.getElementById('room-icons');
+  const roomNameEl = document.getElementById('room-name');
+  const roomKwhEl = document.getElementById('room-kwh');
+  const roomDescEl = document.getElementById('room-description');
+  const roomImageEl = document.getElementById('room-image');
+
+  // Chart.js contexts
+  const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+  const hourlyCtx = document.getElementById('hourlyChart').getContext('2d');
+
+  let monthlyChart;
+  let hourlyChart;
+
+  // Monthly data: 30 days
+  const daysInMonth = 30;
+  const monthlyLabels = Array.from({length: daysInMonth}, (_, i) => (i+1).toString());
+
+// Room data with images and descriptions and consumption figures
+const roomsData = {
+  "Cozinha": {
+    img: "https://cdn.awsli.com.br/600x450/571/571644/produto/252752878/cozinha-01-05gqj0p1d1.jpg", // mesma do seu template cozinha
+    description: "Consumo da cozinha, incluindo eletrodomésticos como geladeira, forno e microondas.",
+    kwhNormal: 0.35,
+    kwhEconomia: 0.15,
+  },
+  "Sala": {
+    img: "https://th.bing.com/th/id/R.49a0cc962d0d7aa7d586cc9dcd444f23?rik=H2GrH8z1YokzQQ&riu=http%3a%2f%2fmonterre.com.br%2fapp%2fuploads%2f2018%2f03%2fAPROVADA_SALA-APTO-TIPO.jpg&ehk=Kl273fRxL5X8tBf6l7VVVs0S5Yjoq2pRBQ2ik8kdJfg%3d&risl=&pid=ImgRaw&r=0", // mesma do seu template sala
+    description: "Consumo da sala de estar, com iluminação e eletrônicos.",
+    kwhNormal: 0.50,
+    kwhEconomia: 0.20,
+  },
+  "Quarto": {
+    img: "https://storage.googleapis.com/a1aa/image/e23cd46d-bdb4-48bf-4810-5f656ca2e2b0.jpg", // mesma do seu template quarto1
+    description: "Consumo do quarto, principalmente iluminação e aparelhos eletrônicos.",
+    kwhNormal: 0.40,
+    kwhEconomia: 0.10,
+  },
+  "Banheiro": {
+    img: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=400&q=80", // pode trocar se quiser
+    description: "Consumo do banheiro, como aquecedor elétrico e iluminação.",
+    kwhNormal: 0.15,
+    kwhEconomia: 0.05,
+  },
+  "Escritório": {
+    img: "https://images.unsplash.com/photo-1512900556885-aaf45ff9fa6f?auto=format&fit=crop&w=400&q=80", // pode trocar se quiser
+    description: "Consumo do escritório, incluindo computador e equipamentos de escritório.",
+    kwhNormal: 0.10,
+    kwhEconomia: 0.05,
+  },
+};
+
+  // Variables for toggle mode and selected room
+  let isEconomyMode = false;
+  let selectedRoom = null;
+
+  // Random utility for monthly consumption generation
+  function randomRange(min, max) {
+    return +(min + Math.random() * (max-min)).toFixed(2);
+  }
+
+  // Generate monthly data - array of 30 daily values
+  function generateMonthlyData(economy) {
+    return Array.from({length: daysInMonth}, () => economy ? randomRange(0.9, 1.5) : randomRange(2.8, 3.4));
+  }
+
+  // Generate hourly data - 24 hours - normal and economy ranges
+  function generateHourlyData(economy) {
+    const arr = [];
+    for(let i=0; i<24; i++) {
+      let base = economy ? 0.2 : 1.2;
+      // Higher usage during 17-21h (evening peak)
+      if(i >= 17 && i <= 21) base += economy ? 0.3 : 1.0;
+      // Slightly lower at night 0-6h 
+      if(i >= 0 && i <= 6) base -= economy ? 0.1 : 0.5;
+      arr.push(+(base + Math.random()*0.2).toFixed(2));
+    }
+    return arr;
+  }
+
+  // Create charts
+  function createMonthlyChart(data) {
+    if(monthlyChart) monthlyChart.destroy();
+    monthlyChart = new Chart(monthlyCtx, {
+      type: 'bar',
+      data: {
+        labels: monthlyLabels,
         datasets: [{
-          label: 'Quilowatt (kW)',
-          backgroundColor: 'rgba(62, 169, 245, 0.2)',
-          borderColor: '#3ea9f5',
-          borderWidth: 3,
-          fill: true,
-          tension: 0.3,
-          data: Array(30).fill(0),
-          pointRadius: 0,
+          label: isEconomyMode ? 'Consumo Mensal (economia)' : 'Consumo Mensal (normal)',
+          data: data,
+          backgroundColor: isEconomyMode ? 'rgba(126, 217, 87, 0.6)' : 'rgba(26, 93, 191, 0.6)',
+          borderColor: isEconomyMode ? '#7ED957' : '#1a5dbf',
+          borderWidth: 1,
+          borderRadius: 4,
         }]
-      };
-      const options = {
+      },
+      options: {
         responsive: true,
-        animation: false,
         scales: {
-          x: {
-            display: true,
-            title: { display: true, text: 'Tempo (segundos atrás)' },
-            ticks: {
-              autoSkip: true,
-              maxTicksLimit: 10,
-              callback: (value, index) => -(29 - index) + 's'
-            }
-          },
           y: {
-            display: true,
             beginAtZero: true,
-            title: { display: true, text: 'Quilowatt (kW)' },
-            suggestedMin: 0,
-            suggestedMax: 5
+            max: 5,
+            ticks: { color: '#c1f0a7', font: { size: 12 } },
+            grid: { color: '#47675c' }
+          },
+          x: {
+            ticks: { color: '#c1f0a7', font: { size: 12, weight: 'bold' } },
+            grid: { color: '#47675c' }
           }
         },
         plugins: {
           legend: {
-            labels: { color: '#fff', font: { weight: 'bold', size: 14 } }
+            labels: { color: '#d0f0a7', font: { weight: 'bold', size: 14 } }
           },
           tooltip: {
-            enabled: true,
-            backgroundColor: '#333',
-            titleFont: { size: 14, weight: 'bold' },
-            bodyFont: { size: 13 },
-            callbacks: {
-              label: context => ` ${context.parsed.y.toFixed(2)} kW`
-            }
+            backgroundColor: '#2c5364',
+            callbacks: { label: ctx => ctx.parsed.y + ' kW' }
           }
         }
-      };
-      const quilowattChart = new Chart(ctx, { type: 'line', data, options });
-      let modoEconomia = false;
-      function gerarConsumoQuilowatt() {
-        if (modoEconomia) {
-          return (Math.random() * 2.0 + 0.5);
-        } else {
-          return (Math.random() * 4.0 + 0.5);
+      }
+    });
+  }
+  // Create hourly chart with live updating data
+  let hourlyData = [];
+  function createHourlyChart(data) {
+    if(hourlyChart) hourlyChart.destroy();
+    hourlyChart = new Chart(hourlyCtx, {
+      type: 'line',
+      data: {
+        labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+        datasets: [{
+          label: isEconomyMode ? 'Consumo Horário (economia)' : 'Consumo Horário (normal)',
+          data: data,
+          borderColor: '#7ED957',
+          backgroundColor: 'rgba(126, 217, 87, 0.37)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          pointBackgroundColor: '#a3e635',
+        }]
+      },
+      options: {
+        responsive: true,
+        animation: false,
+        plugins: {
+          legend: {
+            labels: { color: '#d0f0a7', font: { weight: 'bold', size: 14 } }
+          },
+          tooltip: {
+            backgroundColor: '#2c5364',
+            callbacks: { label: ctx => ctx.parsed.y + ' kW' }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 5,
+            grid: { color: '#47675c' },
+            ticks: { color: '#c1f0a7', font: { size: 12 } }
+          },
+          x: {
+            grid: { color: '#47675c' },
+            ticks: { color: '#c1f0a7', font: { size: 12, weight: 'bold' } }
+          }
         }
       }
-      function atualizarGrafico() {
-        data.datasets[0].data.shift();
-        data.labels.shift();
-        data.labels.push('');
-        data.datasets[0].data.push(gerarConsumoQuilowatt());
-        quilowattChart.update('none');
-      }
-      setInterval(atualizarGrafico, 1000);
-      document.getElementById('toggleMode').addEventListener('click', () => {
-        modoEconomia = !modoEconomia;
-        document.getElementById('toggleMode').textContent = modoEconomia ? 'Modo Normal' : 'Modo Economia';
-      });
+    });
+  }
+
+  // Update hourly chart data: shift left, add new
+  function updateHourlyData() {
+    hourlyData.shift();
+    let base = isEconomyMode ? 0.2 : 1.2;
+    let hour = new Date().getHours();
+    // Peak hours approx 17-21
+    if(hour >= 17 && hour <= 21) base += isEconomyMode ? 0.3 : 1.0;
+    if(hour >=0 && hour <=6) base -= isEconomyMode ? 0.1 : 0.5;
+    const newValue = +(base + Math.random()*0.2).toFixed(2);
+    hourlyData.push(newValue);
+  }
+
+  // Room icons creation + selection
+  function createRoomIcons() {
+    // Create a button for each room
+    roomIconsEl.innerHTML = '';
+    Object.keys(roomsData).forEach(name => {
+      const btn = document.createElement('button');
+      btn.textContent = name;
+      btn.className = 'px-4 py-2 rounded bg-[#1a5dbf] text-white font-bold focus:outline-none focus:ring-2 focus:ring-green-400';
+      btn.setAttribute('type', 'button');
+      btn.setAttribute('aria-pressed', 'false');
+      btn.onclick = () => selectRoom(name, btn);
+      roomIconsEl.appendChild(btn);
+    });
+  }
+
+  function selectRoom(name, el) {
+    Array.from(roomIconsEl.children).forEach(c => {
+      c.classList.remove('active');
+      c.setAttribute('aria-pressed', 'false');
+    });
+    el.classList.add('active');
+    el.setAttribute('aria-pressed', 'true');
+
+    selectedRoom = name;
+    const data = roomsData[name];
+    roomImageEl.src = data.img;
+    roomImageEl.alt = name;
+    roomNameEl.textContent = name;
+    const consumption = isEconomyMode ? data.kwhEconomia : data.kwhNormal;
+    roomKwhEl.textContent = `Consumo: ${consumption.toFixed(2)} kW`;
+    roomDescEl.textContent = data.description;
+  }
+
+  // Update the big energy value with sum of room consumptions for selected mode
+  function updateEnergyValue() {
+    let sum = Object.values(roomsData).reduce((acc, room) => {
+      return acc + (isEconomyMode ? room.kwhEconomia : room.kwhNormal);
+    }, 0);
+    energyValueEl.textContent = sum.toFixed(2) + ' kW';
+  }
+  
+  function toggleEconomyMode() {
+    isEconomyMode = !isEconomyMode;
+    toggleBtn.classList.toggle('active', isEconomyMode);
+    toggleBtn.textContent = isEconomyMode ? 'Economia Ativada' : 'Modo Economia';
+    toggleBtn.setAttribute('aria-pressed', isEconomyMode.toString());
+
+    monthlyData = generateMonthlyData(isEconomyMode);
+    createMonthlyChart(monthlyData);
+
+    hourlyData = generateHourlyData(isEconomyMode);
+    createHourlyChart(hourlyData);
+
+    updateEnergyValue();
+
+    if (selectedRoom) {
+      selectRoom(selectedRoom, Array.from(roomIconsEl.children).find(c => c.textContent === selectedRoom));
     }
+  }
 
+  let monthlyData = [];
 
+  // Initialize function
+  function init() {
+    createRoomIcons();
+
+    monthlyData = generateMonthlyData(isEconomyMode);
+    createMonthlyChart(monthlyData);
+
+    hourlyData = generateHourlyData(isEconomyMode);
+    createHourlyChart(hourlyData);
+
+    updateEnergyValue();
+
+    toggleBtn.addEventListener('click', toggleEconomyMode);
+
+    // Update hourly chart every minute (para demo: a cada 5 segundos)
+    setInterval(() => {
+      updateHourlyData();
+      createHourlyChart(hourlyData);
+      updateEnergyValue();
+    }, 5000);
+  }
+
+  init();
+}
 // Função genérica para sliders de brilho
 function setupSlider(sliderId, fillId, initialValue = 50) {
   const slider = document.getElementById(sliderId);
@@ -820,6 +1034,8 @@ function setupSlider(sliderId, fillId, initialValue = 50) {
     });
   }
 }
+/* REMOVIDO: Funções duplicadas de selectRoom, updateEnergyValue e createRoomIcons.
+   As versões corretas já estão dentro de setupEconomia(). */
 
 // Ative os sliders de cada cômodo
 function setupRoom1() {
